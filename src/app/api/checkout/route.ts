@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { getTicketPrice } from "@/lib/ticket-price";
 
+// Stripe fee: 2.9% + $0.30
+function calculateStripeFee(amountInCents: number): number {
+  return Math.ceil(amountInCents * 0.029 + 30);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -22,6 +27,8 @@ export async function POST(req: NextRequest) {
     }
 
     const priceInCents = getTicketPrice();
+    const subtotal = priceInCents * quantity;
+    const fee = calculateStripeFee(subtotal);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
@@ -40,12 +47,24 @@ export async function POST(req: NextRequest) {
           },
           quantity,
         },
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: "Processing Fee",
+              description: "Credit card processing fee",
+            },
+            unit_amount: fee,
+          },
+          quantity: 1,
+        },
       ],
       metadata: {
         type: "ticket",
         buyerName: name,
         buyerEmail: email,
         quantity: String(quantity),
+        feeInCents: String(fee),
       },
       success_url: `${baseUrl}/tickets/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/tickets/canceled`,

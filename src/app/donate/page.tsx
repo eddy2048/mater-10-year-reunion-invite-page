@@ -17,7 +17,8 @@ export default function DonatePage() {
           <p className="text-green-900/60 max-w-2xl mx-auto">
             Our reunion is organized as a non-profit effort. Your generous
             donations help subsidize event costs and keep ticket prices
-            accessible for all classmates.
+            accessible for all classmates. We prefer Zelle or Venmo since
+            we receive 100% of your donation — no fees taken out!
           </p>
         </div>
 
@@ -25,19 +26,28 @@ export default function DonatePage() {
           {/* Zelle Donation */}
           <div className="bg-white rounded-2xl shadow-md overflow-hidden">
             <div className="bg-purple-700 px-6 py-4">
-              <h2 className="text-white font-bold text-lg">
-                Donate via Zelle
-              </h2>
-              <p className="text-purple-200 text-sm">
-                Instant & fee-free
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-white font-bold text-lg">
+                    Zelle or Venmo
+                  </h2>
+                  <p className="text-purple-200 text-sm">
+                    Instant &amp; fee-free
+                  </p>
+                </div>
+                <span className="bg-gold-400 text-green-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                  Preferred
+                </span>
+              </div>
             </div>
             <div className="p-6">
               <div className="space-y-4">
-                <p className="text-green-900/70 text-sm">
-                  Scan the QR code below with your phone to send a donation
-                  instantly through Zelle — no fees!
-                </p>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-sm text-green-800 font-medium">
+                    We keep 100% of Zelle &amp; Venmo donations — no processing
+                    fees! This is the best way to support the reunion.
+                  </p>
+                </div>
 
                 <div className="flex justify-center">
                   <img
@@ -48,7 +58,9 @@ export default function DonatePage() {
                 </div>
 
                 <div className="bg-gray-50 rounded-xl p-4 text-center">
-                  <p className="text-xs text-gray-500 mb-1">Recipient</p>
+                  <p className="text-xs text-gray-500 mb-1">
+                    Send via Zelle or Venmo to
+                  </p>
                   <p className="text-lg font-bold text-green-900">
                     Mater 2016 Reunion Committee
                   </p>
@@ -75,6 +87,10 @@ export default function DonatePage() {
               </p>
             </div>
             <div className="p-6">
+              <p className="text-xs text-gray-400 mb-4">
+                Credit card payments incur processing fees. If possible,
+                consider Zelle or Venmo so we receive your full donation.
+              </p>
               <DonateForm />
             </div>
           </div>

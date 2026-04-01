@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 
+// Stripe fee: 2.9% + $0.30
+function calculateStripeFee(amountInCents: number): number {
+  return Math.ceil(amountInCents * 0.029 + 30);
+}
+
 export function TicketForm({ priceInCents }: { priceInCents: number }) {
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState("");
@@ -9,7 +14,13 @@ export function TicketForm({ priceInCents }: { priceInCents: number }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const totalFormatted = ((priceInCents * quantity) / 100).toFixed(2);
+  const subtotal = priceInCents * quantity;
+  const fee = calculateStripeFee(subtotal);
+  const total = subtotal + fee;
+
+  const subtotalFormatted = (subtotal / 100).toFixed(2);
+  const feeFormatted = (fee / 100).toFixed(2);
+  const totalFormatted = (total / 100).toFixed(2);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -102,12 +113,31 @@ export function TicketForm({ priceInCents }: { priceInCents: number }) {
       </div>
 
       <div className="border-t border-gray-200 pt-4 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-gray-700 font-medium">Total</span>
-          <span className="text-2xl font-bold text-green-900">
-            ${totalFormatted}
-          </span>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-600 text-sm">
+              {quantity} ticket{quantity > 1 ? "s" : ""}
+            </span>
+            <span className="text-gray-600 text-sm">${subtotalFormatted}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-gray-500 text-sm">
+              Processing fee
+            </span>
+            <span className="text-gray-500 text-sm">${feeFormatted}</span>
+          </div>
+          <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+            <span className="text-gray-700 font-medium">Total</span>
+            <span className="text-2xl font-bold text-green-900">
+              ${totalFormatted}
+            </span>
+          </div>
         </div>
+
+        <p className="text-xs text-gray-400 mb-4">
+          A small processing fee covers credit card charges so 100% of your
+          ticket price goes to the event.
+        </p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
