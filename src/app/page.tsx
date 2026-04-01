@@ -106,9 +106,9 @@ function EventDetails() {
     },
     {
       icon: "🎵",
-      title: "Entertainment",
+      title: "Music",
       description:
-        "Live DJ spinning hits from 2012-2016 and today. Plus special surprises throughout the night.",
+        "Collaborative playlist — add your favorite tracks. Plus special surprises throughout the night.",
     },
     {
       icon: "🅿️",
