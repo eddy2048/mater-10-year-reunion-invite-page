@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model TicketPurchase {
+  id              String   @id @default(cuid())
+  email           String
+  name            String
+  quantity        Int      // 1 or 2
+  totalAmount     Int      // in cents
+  stripeSessionId String   @unique
+  status          String   @default("pending") // pending, completed, failed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Donation {
+  id              String   @id @default(cuid())
+  email           String?
+  name            String?
+  amount          Int      // in cents
+  method          String   // "stripe" or "zelle"
+  stripeSessionId String?  @unique
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model TicketConfig {
+  id        String   @id @default("default")
+  price     Int      // price per ticket in cents
+  updatedAt DateTime @updatedAt
+}
