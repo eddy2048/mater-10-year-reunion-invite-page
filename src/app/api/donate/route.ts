@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { prisma } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,18 +39,6 @@ export async function POST(req: NextRequest) {
       },
       success_url: `${baseUrl}/donate/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/donate`,
-    });
-
-    // Record the pending donation
-    await prisma.donation.create({
-      data: {
-        email: email || null,
-        name: name || null,
-        amount,
-        method: "stripe",
-        stripeSessionId: session.id,
-        status: "pending",
-      },
     });
 
     return NextResponse.json({ url: session.url });

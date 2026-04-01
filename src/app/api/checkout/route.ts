@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { prisma } from "@/lib/db";
 import { getTicketPrice } from "@/lib/ticket-price";
 
 export async function POST(req: NextRequest) {
@@ -22,7 +21,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const priceInCents = await getTicketPrice();
+    const priceInCents = getTicketPrice();
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
@@ -50,18 +49,6 @@ export async function POST(req: NextRequest) {
       },
       success_url: `${baseUrl}/tickets/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/tickets/canceled`,
-    });
-
-    // Record the pending purchase
-    await prisma.ticketPurchase.create({
-      data: {
-        email,
-        name,
-        quantity,
-        totalAmount: priceInCents * quantity,
-        stripeSessionId: session.id,
-        status: "pending",
-      },
     });
 
     return NextResponse.json({ url: session.url });

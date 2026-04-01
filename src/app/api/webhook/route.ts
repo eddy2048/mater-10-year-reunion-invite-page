@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
-import { prisma } from "@/lib/db";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
@@ -30,38 +29,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Stripe tracks payment status natively via the dashboard.
+  // Log events here for observability if needed.
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const metadata = session.metadata;
-
-    if (metadata?.type === "ticket") {
-      await prisma.ticketPurchase.update({
-        where: { stripeSessionId: session.id },
-        data: { status: "completed" },
-      });
-    } else if (metadata?.type === "donation") {
-      await prisma.donation.update({
-        where: { stripeSessionId: session.id },
-        data: { status: "completed" },
-      });
-    }
-  }
-
-  if (event.type === "checkout.session.expired") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const metadata = session.metadata;
-
-    if (metadata?.type === "ticket") {
-      await prisma.ticketPurchase.update({
-        where: { stripeSessionId: session.id },
-        data: { status: "failed" },
-      });
-    } else if (metadata?.type === "donation") {
-      await prisma.donation.update({
-        where: { stripeSessionId: session.id },
-        data: { status: "failed" },
-      });
-    }
+    console.log(
+      `Payment completed: ${session.metadata?.type} — ${session.id}`
+    );
   }
 
   return NextResponse.json({ received: true });

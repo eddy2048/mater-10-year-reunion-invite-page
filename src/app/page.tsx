@@ -269,7 +269,7 @@ function HelpOut() {
 }
 
 export default async function Home() {
-  const priceInCents = await getTicketPrice();
+  const priceInCents = getTicketPrice();
   const priceFormatted = (priceInCents / 100).toFixed(2);
 
   return (
