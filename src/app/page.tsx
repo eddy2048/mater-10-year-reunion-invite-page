@@ -59,7 +59,7 @@ function HeroSection({
                 <div className="mb-4 bg-gold-100 border border-gold-300 rounded-lg p-3">
                   <p className="text-sm text-green-900 font-medium">
                     <strong>Includes:</strong> BBQ dinner, unlimited soda/tea/coffee,
-                    photo booth, and a night of memories! (No alcohol served.)
+                    and a night of memories! (No alcohol served.)
                   </p>
                 </div>
                 <TicketForm priceInCents={priceInCents} />
@@ -90,7 +90,7 @@ function EventDetails() {
       icon: "👔",
       title: "Dress Code",
       description:
-        "Semi-formal / Cocktail attire. Come looking your best — this is our decade celebration!",
+        "Casual chic. Come looking your best — this is our decade celebration!",
     },
     {
       icon: "🍽️",
@@ -100,9 +100,9 @@ function EventDetails() {
     },
     {
       icon: "📸",
-      title: "Photo Booth",
+      title: "Photography",
       description:
-        "Professional photographer and photo booth on-site. Take home memories from the night!",
+        "Professional photographer on-site to capture the night. Take home memories from the reunion!",
     },
     {
       icon: "🎵",

@@ -17,82 +17,91 @@ export default function DonatePage() {
           <p className="text-green-900/60 max-w-2xl mx-auto">
             Our reunion is organized as a non-profit effort. Your generous
             donations help subsidize event costs and keep ticket prices
-            accessible for all classmates. We prefer Zelle or Venmo since
-            we receive 100% of your donation — no fees taken out!
+            accessible for all classmates.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Zelle Donation */}
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div className="bg-purple-700 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-white font-bold text-lg">
-                    Zelle or Venmo
-                  </h2>
-                  <p className="text-purple-200 text-sm">
-                    Instant &amp; fee-free
-                  </p>
-                </div>
-                <span className="bg-gold-400 text-green-900 text-xs font-bold px-2.5 py-1 rounded-full">
-                  Preferred
-                </span>
+        {/* Preferred: Zelle & Venmo */}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <h2 className="text-lg font-bold text-green-900">
+              Zelle &amp; Venmo
+            </h2>
+            <span className="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-1 rounded-full">
+              Preferred — no fees
+            </span>
+          </div>
+          <p className="text-xs text-green-900/40 mb-4">
+            Add your name in the memo so we can thank you!
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Zelle */}
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+              <div className="bg-[#6D1ED4] px-5 py-3">
+                <h3 className="text-white font-bold">Zelle</h3>
               </div>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                  <p className="text-sm text-green-800 font-medium">
-                    We keep 100% of Zelle &amp; Venmo donations — no processing
-                    fees! This is the best way to support the reunion.
-                  </p>
-                </div>
-
-                <div className="flex justify-center">
-                  <img
-                    src="/zelle_qr.png"
-                    alt="Scan to donate via Zelle to Mater 2016 Reunion Committee"
-                    className="w-56 rounded-lg border border-gray-200 object-contain"
-                  />
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 text-center">
-                  <p className="text-xs text-gray-500 mb-1">
-                    Send via Zelle or Venmo to
-                  </p>
-                  <p className="text-lg font-bold text-green-900">
+              <div className="p-5 flex flex-col items-center gap-3">
+                <img
+                  src="/zelle_qr.png"
+                  alt="Scan to donate via Zelle"
+                  className="w-44 rounded-lg border border-gray-200 object-contain"
+                />
+                <div className="text-center">
+                  <p className="text-sm font-bold text-green-900">
                     Mater 2016 Reunion Committee
                   </p>
-                  <p className="font-mono text-sm text-gray-600 mt-1">
+                  <p className="font-mono text-xs text-gray-500 mt-0.5">
                     materseniors16@gmail.com
                   </p>
                 </div>
-
-                <p className="text-xs text-green-900/40 text-center">
-                  Add your name in the memo so we can thank you!
-                </p>
               </div>
             </div>
-          </div>
 
-          {/* Card Donation */}
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div className="bg-green-900 px-6 py-4">
-              <h2 className="text-gold-400 font-bold text-lg">
-                Donate by Card
-              </h2>
-              <p className="text-white/50 text-sm">
-                Credit/debit card or Apple Pay
-              </p>
-            </div>
-            <div className="p-6">
-              <p className="text-xs text-gray-400 mb-4">
-                Credit card payments incur processing fees. If possible,
-                consider Zelle or Venmo so we receive your full donation.
-              </p>
-              <DonateForm />
-            </div>
+            {/* Venmo */}
+            <a
+              href="https://venmo.com/mater_co_2016_alumni"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <div className="bg-[#008CFF] px-5 py-3">
+                <h3 className="text-white font-bold">Venmo</h3>
+              </div>
+              <div className="p-5 flex flex-col items-center gap-3">
+                <img
+                  src="/venmo_qr.jpeg"
+                  alt="Scan to donate via Venmo"
+                  className="w-44 rounded-lg border border-gray-200 object-contain"
+                />
+                <div className="text-center">
+                  <p className="text-sm font-bold text-[#008CFF]">
+                    @mater_co_2016_alumni
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Tap to open in Venmo
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        {/* Card Donation */}
+        <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+          <div className="bg-green-900 px-6 py-4">
+            <h2 className="text-gold-400 font-bold text-lg">
+              Donate by Card
+            </h2>
+            <p className="text-white/50 text-sm">
+              Credit/debit card or Apple Pay
+            </p>
+          </div>
+          <div className="p-6 max-w-md mx-auto">
+            <p className="text-xs text-gray-400 mb-4">
+              Credit card payments incur processing fees. If possible,
+              consider Zelle or Venmo so we receive your full donation.
+            </p>
+            <DonateForm />
           </div>
         </div>
 
