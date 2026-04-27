@@ -1,76 +1,47 @@
 import Link from "next/link";
-import { getTicketPrice } from "@/lib/ticket-price";
-import { TicketForm } from "./tickets/ticket-form";
 import { ShareButton } from "./share-button";
 
-function HeroSection({
-  priceInCents,
-  priceFormatted,
-}: {
-  priceInCents: number;
-  priceFormatted: string;
-}) {
+function HeroSection() {
   return (
     <section className="relative bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white overflow-hidden">
       <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_1.5px,_rgba(255,255,255,0.5)_1px,_transparent_1px)] bg-[length:28px_28px]" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Event info */}
-          <div className="text-center lg:text-left">
-            <p className="text-gold-400 font-semibold text-sm sm:text-base uppercase tracking-widest mb-4">
-              You&apos;re Invited
+        <div className="text-center max-w-3xl mx-auto">
+          <p className="text-gold-400 font-semibold text-sm sm:text-base uppercase tracking-widest mb-4">
+            You&apos;re Invited
+          </p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
+            Mater Academy
+            <br />
+            <span className="text-gold-400">Class of 2016</span>
+            <br />
+            10 Year Reunion
+          </h1>
+          <p className="text-green-200 text-lg sm:text-xl mb-6">
+            It&apos;s been a decade! Come reconnect with old friends, share
+            stories, and celebrate how far we&apos;ve all come.
+          </p>
+          <p className="text-gold-400 text-lg sm:text-xl font-semibold">
+            June 6th, 2026 &middot; 6:00 PM — 9:00 PM
+          </p>
+          <p className="text-green-300 text-sm mt-1">Venue: TBD</p>
+          <div className="mt-8 inline-block bg-white/10 border border-gold-300/40 rounded-2xl px-6 py-5">
+            <p className="text-gold-400 font-semibold text-base sm:text-lg">
+              Ticket sales are paused
             </p>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
-              Mater Academy
-              <br />
-              <span className="text-gold-400">Class of 2016</span>
-              <br />
-              10 Year Reunion
-            </h1>
-            <p className="text-green-200 text-lg sm:text-xl max-w-lg mb-6">
-              It&apos;s been a decade! Come reconnect with old friends, share
-              stories, and celebrate how far we&apos;ve all come.
-            </p>
-            <p className="text-gold-400 text-lg sm:text-xl font-semibold">
-              June 6th, 2026 &middot; 6:00 PM — 9:00 PM
-            </p>
-            <p className="text-green-300 text-sm mt-1">
-              Dave &amp; Buster&apos;s &middot; Dolphin Mall, Miami
+            <p className="text-white/80 text-sm mt-1 max-w-md">
+              We&apos;re finalizing the venue. Tickets will be available here
+              once it&apos;s confirmed — stay tuned!
             </p>
           </div>
-
-          {/* Right: Ticket form */}
-          <div id="tickets" className="w-full max-w-md mx-auto lg:mx-0 lg:ml-auto scroll-mt-24">
-            <div className="bg-green-900 rounded-2xl shadow-2xl overflow-hidden">
-              <div className="px-6 py-5">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-white font-bold text-lg">
-                    Get Your Tickets
-                  </h2>
-                  <div className="text-right">
-                    <p className="text-gold-400 text-2xl font-bold">
-                      ${priceFormatted}
-                    </p>
-                    <p className="text-white/50 text-xs">per person</p>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white rounded-t-2xl p-6">
-                <div className="mb-4 bg-gold-100 border border-gold-300 rounded-lg p-3">
-                  <p className="text-sm text-green-900 font-medium">
-                    <strong>Includes:</strong> BBQ dinner, unlimited soda/tea/coffee,
-                    and a night of memories! (No alcohol served.)
-                  </p>
-                </div>
-                <TicketForm priceInCents={priceInCents} />
-              </div>
-            </div>
-            <p className="text-center text-green-300 text-xs mt-3">
-              Up to 2 tickets per person. Apple Pay &amp; Google Pay accepted.
-            </p>
-            <div className="mt-4 text-center">
-              <ShareButton />
-            </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/donate"
+              className="inline-flex items-center justify-center bg-gold-400 hover:bg-gold-500 text-green-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg"
+            >
+              Make a Donation
+            </Link>
+            <ShareButton />
           </div>
         </div>
       </div>
@@ -84,7 +55,7 @@ function EventDetails() {
       icon: "📍",
       title: "Venue",
       description:
-        "Dave & Buster's — Dolphin Mall, 11401 NW 12th St, Miami, FL 33172",
+        "TBD — we're finalizing the venue and will share details here as soon as it's confirmed.",
     },
     {
       icon: "👔",
@@ -109,12 +80,6 @@ function EventDetails() {
       title: "Music",
       description:
         "Collaborative playlist — add your favorite tracks. Plus special surprises throughout the night.",
-    },
-    {
-      icon: "🅿️",
-      title: "Parking",
-      description:
-        "Free parking at Dolphin Mall. Rideshare drop-off available at the mall entrance.",
     },
   ];
 
@@ -145,47 +110,6 @@ function EventDetails() {
               </p>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function VenueMap() {
-  return (
-    <section className="py-16 sm:py-24 bg-green-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gold-400 mb-4">
-            Find the Venue
-          </h2>
-          <p className="text-white/70 max-w-2xl mx-auto">
-            Dave &amp; Buster&apos;s at Dolphin Mall — 11401 NW 12th St, Miami,
-            FL 33172
-          </p>
-        </div>
-        <div className="rounded-2xl overflow-hidden shadow-lg">
-          <iframe
-            title="Dave & Buster's Dolphin Mall"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3593.1!2d-80.3832!3d25.7884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b90cd1e1e34f%3A0x0!2sDave%20%26%20Buster's!5e0!3m2!1sen!2sus!4v1"
-            width="100%"
-            height="400"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </div>
-        <div className="text-center mt-6">
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=Dave+and+Busters+Dolphin+Mall+11401+NW+12th+St+Miami+FL+33172"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-gold-400 hover:bg-gold-500 text-green-900 font-semibold px-6 py-3 rounded-xl transition-colors shadow-md"
-          >
-            <span>📍</span>
-            Open in Google Maps
-          </a>
         </div>
       </div>
     </section>
@@ -269,14 +193,10 @@ function HelpOut() {
 }
 
 export default async function Home() {
-  const priceInCents = getTicketPrice();
-  const priceFormatted = (priceInCents / 100).toFixed(2);
-
   return (
     <>
-      <HeroSection priceInCents={priceInCents} priceFormatted={priceFormatted} />
+      <HeroSection />
       <EventDetails />
-      <VenueMap />
       <WhatToBring />
       <HelpOut />
     </>
