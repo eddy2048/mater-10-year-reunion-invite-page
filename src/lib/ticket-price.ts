@@ -1,5 +1,5 @@
 const DEFAULT_PRICE = parseInt(
-  process.env.DEFAULT_TICKET_PRICE_CENTS || "5000",
+  process.env.DEFAULT_TICKET_PRICE_CENTS || "7500",
   10
 );
 
