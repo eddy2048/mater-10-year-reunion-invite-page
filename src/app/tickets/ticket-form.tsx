@@ -1,10 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  getPaymentDeadlineRemainingMs,
+  isPaymentDeadlineExpired,
+  PAYMENT_DEADLINE_LABEL,
+} from "@/lib/payment-deadline";
 
 // Stripe fee: 2.9% + $0.30
 function calculateStripeFee(amountInCents: number): number {
   return Math.ceil(amountInCents * 0.029 + 30);
+}
+
+function getCountdownParts(remainingMs: number | null) {
+  if (remainingMs === null) {
+    return [
+      { label: "Days", value: "--" },
+      { label: "Hours", value: "--" },
+      { label: "Min", value: "--" },
+      { label: "Sec", value: "--" },
+    ];
+  }
+
+  const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return [
+    { label: "Days", value: String(days) },
+    { label: "Hours", value: String(hours).padStart(2, "0") },
+    { label: "Min", value: String(minutes).padStart(2, "0") },
+    { label: "Sec", value: String(seconds).padStart(2, "0") },
+  ];
 }
 
 export function TicketForm({ priceInCents }: { priceInCents: number }) {
@@ -13,6 +42,7 @@ export function TicketForm({ priceInCents }: { priceInCents: number }) {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [remainingMs, setRemainingMs] = useState<number | null>(null);
 
   const subtotal = priceInCents * quantity;
   const fee = calculateStripeFee(subtotal);
@@ -21,9 +51,29 @@ export function TicketForm({ priceInCents }: { priceInCents: number }) {
   const subtotalFormatted = (subtotal / 100).toFixed(2);
   const feeFormatted = (fee / 100).toFixed(2);
   const totalFormatted = (total / 100).toFixed(2);
+  const paymentClosed = remainingMs !== null && remainingMs <= 0;
+  const countdownParts = getCountdownParts(remainingMs);
+
+  useEffect(() => {
+    function updateCountdown() {
+      setRemainingMs(getPaymentDeadlineRemainingMs());
+    }
+
+    updateCountdown();
+    const interval = window.setInterval(updateCountdown, 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (isPaymentDeadlineExpired()) {
+      setRemainingMs(0);
+      setError(`Ticket sales closed at ${PAYMENT_DEADLINE_LABEL}.`);
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -52,6 +102,57 @@ export function TicketForm({ priceInCents }: { priceInCents: number }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div
+        className={`rounded-lg border p-3 ${
+          paymentClosed
+            ? "bg-red-50 border-red-200"
+            : "bg-green-50 border-green-200"
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <p
+            className={`text-sm font-bold ${
+              paymentClosed ? "text-red-800" : "text-green-900"
+            }`}
+          >
+            {paymentClosed ? "Ticket sales are closed" : "Payment deadline"}
+          </p>
+          <p
+            className={`text-right text-xs font-semibold ${
+              paymentClosed ? "text-red-700" : "text-green-800"
+            }`}
+          >
+            {PAYMENT_DEADLINE_LABEL}
+          </p>
+        </div>
+
+        <div className="mt-3 grid grid-cols-4 gap-2" aria-live="polite">
+          {countdownParts.map((part) => (
+            <div
+              key={part.label}
+              className="min-h-14 rounded-md bg-white border border-black/5 px-2 py-2 text-center"
+            >
+              <p className="font-bold tabular-nums text-green-900 leading-none text-lg">
+                {part.value}
+              </p>
+              <p className="mt-1 text-[10px] font-semibold uppercase text-gray-500">
+                {part.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <p
+          className={`mt-2 text-xs ${
+            paymentClosed ? "text-red-700" : "text-green-800"
+          }`}
+        >
+          {paymentClosed
+            ? "Purchases are no longer available."
+            : "Complete checkout before the deadline to reserve your spot."}
+        </p>
+      </div>
+
       <div>
         <label
           htmlFor="name"
@@ -147,10 +248,16 @@ export function TicketForm({ priceInCents }: { priceInCents: number }) {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || remainingMs === null || paymentClosed}
           className="w-full bg-gold-500 hover:bg-gold-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-green-900 font-bold py-3 px-6 rounded-lg text-lg transition-colors shadow-md"
         >
-          {loading ? "Processing..." : `Pay $${totalFormatted}`}
+          {paymentClosed
+            ? "Ticket Sales Closed"
+            : loading
+              ? "Processing..."
+              : remainingMs === null
+                ? "Checking Payment Window..."
+                : `Pay $${totalFormatted}`}
         </button>
       </div>
     </form>

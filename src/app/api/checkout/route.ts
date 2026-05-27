@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripeClient } from "@/lib/stripe";
+import {
+  isPaymentDeadlineExpired,
+  PAYMENT_DEADLINE_LABEL,
+} from "@/lib/payment-deadline";
 import { getTicketPrice } from "@/lib/ticket-price";
 
 // Stripe fee: 2.9% + $0.30
@@ -9,6 +13,13 @@ function calculateStripeFee(amountInCents: number): number {
 
 export async function POST(req: NextRequest) {
   try {
+    if (isPaymentDeadlineExpired()) {
+      return NextResponse.json(
+        { error: `Ticket sales closed at ${PAYMENT_DEADLINE_LABEL}.` },
+        { status: 410 }
+      );
+    }
+
     const body = await req.json();
     const { email, name, quantity } = body;
 
@@ -30,6 +41,7 @@ export async function POST(req: NextRequest) {
     const subtotal = priceInCents * quantity;
     const fee = calculateStripeFee(subtotal);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const stripe = getStripeClient();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
